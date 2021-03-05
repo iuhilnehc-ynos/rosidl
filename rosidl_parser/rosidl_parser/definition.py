@@ -634,10 +634,13 @@ class Action:
         # necessary include for injected timestamp member
         self.implicit_includes = [
             Include('builtin_interfaces/msg/Time.idl'),
+            Include('std_msgs/msg/String.idl'),
             Include('unique_identifier_msgs/msg/UUID.idl'),
         ]
 
         # derived types
+        string_type = NamespacedType(
+                namespaces=['std_msgs', 'msg'], name='String')
         goal_id_type = NamespacedType(
                 namespaces=['unique_identifier_msgs', 'msg'], name='UUID')
 
@@ -650,6 +653,7 @@ class Action:
                     namespaces=namespaced_type.namespaces,
                     name=goal_service_name + SERVICE_REQUEST_MESSAGE_SUFFIX),
                 members=[
+                    Member(string_type, 'node'),
                     Member(goal_id_type, 'goal_id'),
                     Member(goal.structure.namespaced_type, 'goal')]
             )),
@@ -692,6 +696,7 @@ class Action:
                 namespaces=namespaced_type.namespaces,
                 name=namespaced_type.name + ACTION_FEEDBACK_MESSAGE_SUFFIX),
             members=[
+                Member(string_type, 'node'),
                 Member(goal_id_type, 'goal_id'),
                 Member(feedback.structure.namespaced_type, 'feedback')]
         ))

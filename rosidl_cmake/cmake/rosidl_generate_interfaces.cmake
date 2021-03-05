@@ -151,6 +151,16 @@ macro(rosidl_generate_interfaces target)
       endif()
       list_append_unique(_ARG_DEPENDENCIES "action_msgs")
       ament_export_dependencies(action_msgs)
+
+      find_package(std_msgs QUIET)
+      if(NOT ${std_msgs})
+        message(FATAL_ERROR
+          "Unable to generate action interface for '${_tuple_file}'. "
+          "In order to generate action interfaces you must add a depend tag "
+          "for 'std_msgs' in your package.xml.")
+      endif()
+      list_append_unique(_ARG_DEPENDENCIES "std_msgs")
+      ament_export_dependencies(std_msgs)
       break()
     endif()
   endforeach()
